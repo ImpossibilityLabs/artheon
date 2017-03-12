@@ -91,6 +91,6 @@ Set your Artsy credentials to environment variables of your docker container.
 
 Searchable fields: `title`, `category`, `medium`, `date_str`.
 
-Supported query params: `search`, `limit`, `page`.
+Supported query params: `search`, `limit`, `page`, `public_domain`, `paintings_only`.
 
-Sample query: `curl -X GET -H "Accept:application/json" /api/artworks?search=Stone&page=1&limit=10`.
+Sample query: `curl -X GET -H "Accept:application/json" /api/artworks?search=Stone&page=1&limit=10&paintings_only=true&public_domain=true`.
