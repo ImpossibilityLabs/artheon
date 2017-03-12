@@ -6,13 +6,21 @@ Currently it uses [Artsy](https://www.artsy.net/) to populate it's database, use
 ## Installation
 Application is distributed as docker container, so you need to pass your unique credentials as ENVIRONMENT variables.
 
+### Endpoint
+Set your website port, domain and secret key.
+
+* `PORT`: 80
+* `SSL_PORT`: 443
+* `DOMAIN`: local.artheon.com
+* `SECRET`: *********
+
 ### Database
 Set your database credentials to environment variables of your docker container.
 
-* `MYSQL_USERNAME`
-* `MYSQL_PASSWORD`
-* `MYSQL_DATABASE`
-* `MYSQL_HOSTNAME`
+* `MYSQL_USERNAME`: artheon
+* `MYSQL_PASSWORD`: *******
+* `MYSQL_DATABASE`: artheon
+* `MYSQL_HOSTNAME`: mysql
 
 ### Artsy
 Set your Artsy credentials to environment variables of your docker container.

@@ -13,8 +13,17 @@ use Mix.Config
 # which you typically run after static files are built.
 config :artheon, Artheon.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: "example.com", port: 80],
-  cache_static_manifest: "priv/static/manifest.json"
+  url: [host: {:system, "DOMAIN"}, port: {:system, "SSL_PORT"}],
+  force_ssl: [port: {:system, "SSL_PORT"}],
+  environment: System.get_env("MIX_ENV") || "prod",
+  https: [
+      port: {:system, "SSL_PORT"},
+      otp_app: :eyr,
+      keyfile: "/etc/letsencrypt/live/#{System.get_env(~s(DOMAIN))}/privkey.pem",
+      certfile: "/etc/letsencrypt/live/#{System.get_env(~s(DOMAIN))}/cert.pem"
+  ],
+  cache_static_manifest: "priv/static/manifest.json",
+  secret_key_base: {:system, "SECRET"}
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -58,4 +67,4 @@ config :logger, level: :info
 
 # Finally import the config/prod.secret.exs
 # which should be versioned separately.
-import_config "prod.secret.exs"
+# import_config "prod.secret.exs"
