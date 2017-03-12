@@ -54,6 +54,7 @@ defmodule Artheon.Artwork do
   """
   def changeset(struct), do: changeset(struct, %{})
   def changeset(struct, %{
+    "medium" => medium,
     "title" => title,
     "slug" => slug,
     "dimensions" => %{
@@ -69,9 +70,10 @@ defmodule Artheon.Artwork do
     "updated_at" => updated_at,
   } = params) do
     artwork_params = params
-    |> Map.drop(["dimensions", "date", "created_at", "updated_at", "slug", "title"])
+    |> Map.drop(["dimensions", "date", "created_at", "updated_at", "slug", "title", "medium"])
     |> Map.put("slug", String.slice(slug, 0, 255))
     |> Map.put("title", String.slice(title, 0, 255))
+    |> Map.put("medium", String.slice(medium, 0, 255))
     |> Map.put("height", height)
     |> Map.put("width", width)
     |> Map.put("depth", depth)
