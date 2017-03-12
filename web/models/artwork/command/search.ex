@@ -14,7 +14,7 @@ defmodule Artheon.Artwork.Command.Search do
   def execute(params) do
     search = Map.get(params, "search")
     limit = String.to_integer(Map.get(params, "limit", @max_artworks_per_page))
-    offset = ((String.to_integer(Map.get(params, "page", 1)) - 1) * limit)
+    offset = ((String.to_integer(Map.get(params, "page", "1")) - 1) * limit)
 
     query = if search do
       from a in Artwork,
