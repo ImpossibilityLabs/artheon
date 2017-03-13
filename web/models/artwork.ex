@@ -44,7 +44,6 @@ defmodule Artheon.Artwork do
     :uid,
     :slug,
     :title,
-    :category,
     :height,
     :width
   ]
