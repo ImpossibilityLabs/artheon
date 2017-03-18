@@ -22,6 +22,7 @@ defmodule Artheon.Router do
   scope "/api", Artheon do
     pipe_through :api
 
+    resources "/artists", ArtistController, except: [:new, :edit]
     resources "/artworks", ArtworkController, except: [:new, :edit]
     resources "/artwork_images", ArtworkImageController, except: [:new, :edit]
   end

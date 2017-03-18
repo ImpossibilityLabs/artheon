@@ -94,3 +94,5 @@ Searchable fields: `title`, `category`, `medium`, `date_str`.
 Supported query params: `search`, `limit`, `page`, `public_domain`, `paintings_only`.
 
 Sample query: `curl -X GET -H "Accept:application/json" /api/artworks?search=Stone&page=1&limit=10&paintings_only=true&public_domain=true`.
+
+By artist: `curl -X GET -H "Accept:application/json" /api/artworks?artist=vincent&page=1&limit=10&paintings_only=true&public_domain=true`.

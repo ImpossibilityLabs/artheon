@@ -27,7 +27,8 @@ defmodule Artheon.ArtworkView do
       website: artwork.website,
       collecting_institution: artwork.collecting_institution,
       image_rights: artwork.image_rights,
-      images: render_many(artwork.images, Artheon.ArtworkImageView, "artwork_image.json")
+      images: render_many(artwork.images, Artheon.ArtworkImageView, "artwork_image.json"),
+      artist: render_one(artwork.artist, Artheon.ArtistView, "artist.json")
     }
   end
 end

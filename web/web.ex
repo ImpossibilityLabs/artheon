@@ -23,6 +23,7 @@ defmodule Artheon.Web do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
+      import Artheon.Models.Helpers
     end
   end
 

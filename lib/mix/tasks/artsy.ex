@@ -5,6 +5,7 @@ defmodule Mix.Tasks.Artsy do
 
   use Mix.Task
   require Logger
+  alias Artheon.Artist
   alias Artheon.Artwork
   alias Artheon.ArtworkImage
   alias Artheon.Repo
@@ -68,6 +69,9 @@ defmodule Mix.Tasks.Artsy do
     changeset = Artwork.changeset(%Artwork{}, artwork_params)
 
     with nil <- Repo.get_by(Artwork, uid: uid),
+      {:ok, artist_response} <- Artsy.artists(:artwork, uid),
+      %{id: artist_id} <- save_first_artist(artist_response),
+      changeset = Artwork.changeset(changeset, %{"artist_id" => artist_id}),
       {:ok, %{id: artwork_id} = artwork} <- Repo.insert(changeset)
     do
       Enum.each image_versions, fn(image_version) ->
@@ -81,6 +85,18 @@ defmodule Mix.Tasks.Artsy do
       Logger.info fn() -> "Artwork #{uid} was saved to the database" end
       artwork
     else
+      %Artwork{uid: artwork_id, artist_id: nil} = artwork ->
+        with {:ok, artist_response} <- Artsy.artists(:artwork, artwork_id),
+          %{id: artist_id} <- save_first_artist(artist_response)
+        do
+          changeset = Artwork.changeset(artwork, %{"artist_id" => artist_id})
+          Repo.update(changeset)
+          Logger.info fn() -> "Skipping artwork #{uid} (already in database), attaching artist" end
+          false
+        else
+          _ ->
+            false
+        end
       %Artwork{} ->
         Logger.info fn() -> "Skipping artwork #{uid} (already in database)" end
         false
@@ -92,4 +108,32 @@ defmodule Mix.Tasks.Artsy do
     end
   end
   def save_artwork(_params), do: nil
+
+  @doc """
+  Save Artsy decoded JSON object to database.
+  """
+  @spec save_first_artist(map()) :: %Artist{} | nil
+  def save_first_artist(%{"_embedded" => %{"artists" => []}}), do: nil
+  def save_first_artist(%{"_embedded" => %{"artists" => [%{"id" => uid} = artist_params | _]}}) do
+    artist_params = artist_params
+    |> Map.drop(["id", "image_versions", "_links"])
+    |> Map.put("uid", uid)
+    changeset = Artist.changeset(%Artist{}, artist_params)
+
+    with nil <- Repo.get_by(Artist, uid: uid),
+      {:ok, artist} <- Repo.insert(changeset)
+    do
+      Logger.info fn() -> "Artist #{uid} was saved to the database" end
+      artist
+    else
+      %Artist{} = artist ->
+        Logger.info fn() -> "Skipping artist #{uid} (already in database)" end
+        artist
+      {:error, changeset} ->
+        Logger.warn fn() -> "Artist #{uid} was not saved: #{inspect(changeset)}" end
+        nil
+      _ ->
+        nil
+    end
+  end
 end

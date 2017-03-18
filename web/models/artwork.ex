@@ -20,6 +20,7 @@ defmodule Artheon.Artwork do
     field :image_rights, :string
 
     has_many :images, Artheon.ArtworkImage
+    belongs_to :artist, Artheon.Artist
   end
 
   @editable_fields [
@@ -38,7 +39,8 @@ defmodule Artheon.Artwork do
     :diameter,
     :website,
     :collecting_institution,
-    :image_rights
+    :image_rights,
+    :artist_id
   ]
   @required_fields [
     :uid,
@@ -102,17 +104,4 @@ defmodule Artheon.Artwork do
     end
   end
   defp parse_date(_date), do: nil
-
-  @spec to_ecto_datetime(String.t) :: %Ecto.DateTime{}
-  defp to_ecto_datetime(artsy_date) do
-    with {:ok, artsy_date} <- DateTime.from_iso8601(artsy_date),
-      ts when is_integer(ts) <- DateTime.to_unix(artsy_date),
-      %Ecto.DateTime{} = ecto_date <- Ecto.DateTime.from_unix!(ts, :seconds)
-    do
-      ecto_date
-    else
-      _ ->
-        nil
-    end
-  end
 end
